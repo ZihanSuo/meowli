@@ -1,7 +1,708 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>喵历</title></head>
-<body style="font-family:system-ui;padding:40px;text-align:center">
-<h1>喵历</h1><p>多猫家庭的健康档案与周期护理助手，建设中</p>
-</body></html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="喵历">
+<meta name="theme-color" content="#F3EEE6">
+<title>喵历</title>
+<meta name="description" content="多猫家庭的健康档案、周期护理与宠友社区">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<style>
+:root{--bg:#F3EEE6;--card:#fff;--ink:#2B2622;--sub:#8A8178;--line:#ECE5DA;--acc:#E8833A;--acc2:#FFF1E4;--red:#D9534F;--red2:#FDECEA;--green:#3E9B6B;--green2:#E7F5EC;color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.phone{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg);position:relative;padding-bottom:calc(86px + env(safe-area-inset-bottom))}
+@media(min-width:600px){
+ body{background:#E2DACE;padding:24px 0}
+ .phone{min-height:calc(100vh - 48px);border-radius:32px;box-shadow:0 24px 70px rgba(60,40,20,.18)}
+ .nav{bottom:24px!important;border-radius:0 0 32px 32px}
+ .deskhint{display:block!important}
+}
+.deskhint{display:none;position:fixed;left:24px;top:24px;max-width:240px;font-size:13px;line-height:1.6;color:#6d645b}
+.deskhint b{font-size:18px;color:var(--ink);display:block;margin-bottom:6px}
+.hdr{position:sticky;top:0;z-index:20;background:var(--bg);padding:calc(12px + env(safe-area-inset-top)) 16px 6px}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.logo{font-size:22px;font-weight:800}
+.logo small{font-size:12px;color:var(--sub);font-weight:500;margin-left:6px}
+.hbtns{display:flex;gap:8px}
+.ib{border:none;background:#fff;border-radius:999px;height:34px;padding:0 12px;font-size:13px;display:inline-flex;align-items:center;gap:4px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06);color:var(--ink)}
+.ib.sos{background:var(--red);color:#fff;font-weight:600}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;user-select:none}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.av{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex:none}
+.av.lg{width:40px;height:40px;font-size:16px}
+.av.xl{width:56px;height:56px;font-size:22px}
+main{padding:0 16px 16px}
+.card{background:var(--card);border-radius:18px;padding:16px;margin-top:12px;box-shadow:0 1px 3px rgba(60,40,20,.05)}
+.card h3{font-size:16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.card h3 .muted{font-size:12px;font-weight:400}
+.muted{color:var(--sub)}
+.tiny{font-size:12px;margin-top:10px;text-align:center}
+.link{color:var(--acc);font-size:13px;cursor:pointer;font-weight:500}
+.todo{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line)}
+.todos .todo:first-child{border-top:none}
+.todo .tx{flex:1;min-width:0}
+.t1{font-size:14px;font-weight:600;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.t2{font-size:12px;color:var(--sub);margin-top:3px;line-height:1.4}
+.badge{font-size:11px;padding:2px 7px;border-radius:6px;font-weight:600}
+.b-red{background:var(--red2);color:var(--red)}.b-org{background:var(--acc2);color:var(--acc)}.b-grey{background:#F1EEE9;color:var(--sub)}.b-green{background:var(--green2);color:var(--green)}
+.btn{border:none;border-radius:10px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;background:var(--acc);color:#fff;flex:none}
+.btn.ghost{background:#F4EFE8;color:var(--ink)}
+.btn.block{width:100%;padding:13px;font-size:15px;border-radius:12px;margin-top:14px}
+.alert{border-radius:14px;padding:12px 14px;margin-top:12px;font-size:13px;line-height:1.6;display:flex;gap:10px}
+.alert.red{background:var(--red2);color:#8E2F2B}.alert.org{background:var(--acc2);color:#8A4A17}.alert.info{background:#fff;color:var(--ink)}
+.alert .x{margin-left:auto;cursor:pointer;color:var(--sub);flex:none}
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wcard{border:1px solid var(--line);border-radius:14px;padding:10px 12px;cursor:pointer}
+.wname{font-size:12px;display:flex;align-items:center;gap:6px}
+.kg{font-size:20px;font-weight:700;margin-top:6px}
+.kg small{font-size:12px;font-weight:500;margin-left:4px}
+.spark{width:100%;height:40px;display:block;margin-top:4px}
+.tl{position:relative;padding-left:20px;margin-top:4px}
+.tl:before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.ti{position:relative;padding:6px 0 12px}
+.ti:before{content:'';position:absolute;left:-19px;top:11px;width:10px;height:10px;border-radius:50%;background:var(--dot,#ccc);box-shadow:0 0 0 3px #fff}
+.ti .d{font-size:12px;color:var(--sub)}
+.ti .c{font-size:14px;margin-top:3px;line-height:1.55}
+.ti .c .s{color:var(--sub);font-size:13px}
+.ti.ms .c{font-weight:600}
+.thumb{width:100%;max-height:200px;object-fit:cover;border-radius:12px;margin-top:8px;display:block}
+.more{text-align:center;padding:8px;font-size:13px;color:var(--acc);cursor:pointer}
+textarea,.inp{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:15px;font-family:inherit;background:#FCFAF7;color:var(--ink);outline:none}
+textarea{min-height:88px;resize:none;line-height:1.55}
+textarea:focus,.inp:focus{border-color:var(--acc)}
+.prev{font-size:12px;margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:22px}
+.crow{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.ck{font-size:13px;display:flex;align-items:center;gap:4px;color:var(--sub)}
+.ck input{accent-color:var(--acc)}
+.post .ph{display:flex;align-items:center;gap:8px;font-size:13px}
+.post .txt{font-size:15px;line-height:1.65;margin-top:10px;white-space:pre-wrap;word-break:break-word}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pf{display:flex;gap:8px;margin-top:10px;font-size:12px}
+.mscroll{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px}
+.mscroll::-webkit-scrollbar{display:none}
+.mc{flex:none;width:210px;border:1px solid var(--line);border-radius:16px;padding:14px}
+.mc .nm{font-weight:700;font-size:15px}
+.score{font-size:12px;color:var(--green);font-weight:700}
+.feed{border-top:1px solid var(--line);padding:12px 0}
+.feed:first-child{border-top:none}
+.feed .fh{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sub)}
+.feed .ft{font-size:14px;line-height:1.6;margin-top:6px}
+.row{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--line);cursor:pointer}
+.row:first-of-type{border-top:none}
+.row .grow{flex:1;min-width:0}
+.chev{color:#C9C0B5;font-size:18px}
+.stats{display:flex;margin-top:14px;text-align:center}
+.stats div{flex:1}
+.stats b{font-size:20px;display:block}
+.stats span{font-size:12px;color:var(--sub)}
+.seg{display:flex;background:#F1ECE4;border-radius:10px;padding:3px;gap:3px}
+.seg div{flex:1;text-align:center;padding:7px;border-radius:8px;font-size:13px;cursor:pointer}
+.seg .on{background:#fff;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-around;padding:8px 6px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--line);z-index:30}
+.nav button{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:var(--sub);cursor:pointer;width:64px;font-family:inherit}
+.nav button .ic{font-size:21px;filter:grayscale(1);opacity:.6}
+.nav button.on{color:var(--ink);font-weight:600}
+.nav button.on .ic{filter:none;opacity:1}
+.nav .plus{width:52px;height:52px;border-radius:50%;background:var(--acc);color:#fff;font-size:30px;font-weight:300;justify-content:center;margin-top:-26px;box-shadow:0 6px 16px rgba(232,131,58,.45)}
+.mask{position:fixed;inset:0;background:rgba(30,20,10,.38);z-index:50;opacity:0;pointer-events:none;transition:opacity .2s}
+.mask.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,105%);width:100%;max-width:430px;max-height:88vh;overflow-y:auto;background:var(--bg);border-radius:22px 22px 0 0;z-index:51;padding:18px 16px calc(24px + env(safe-area-inset-bottom));transition:transform .25s ease}
+.sheet.on{transform:translate(-50%,0)}
+.shd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:17px}
+.shd .muted{font-size:14px;cursor:pointer}
+.fl{display:block;font-size:12px;color:var(--sub);margin:14px 0 6px}
+.tgrid{display:flex;flex-wrap:wrap;gap:8px}
+.scanbtn{display:block;margin-top:14px;border:1.5px dashed #D9CBB8;border-radius:12px;padding:12px;text-align:center;font-size:13px;color:#8A6B4A;cursor:pointer;background:#FFFaF3}
+.scan{margin-top:10px;font-size:13px;padding:10px 12px;border-radius:10px;background:#fff}
+.scan.ok{background:var(--green2);color:var(--green)}
+.em{background:#fff;border-radius:16px;padding:4px 14px;margin-top:10px}
+.em .r{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.em .r:first-child{border-top:none}
+.em .r span:first-child{color:var(--sub);flex:none}
+.em .r span:last-child{text-align:right}
+.em .r.hot span:last-child{color:var(--red);font-weight:700}
+.emhd{background:var(--red);color:#fff;border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px}
+.rules td{padding:9px 4px;border-top:1px solid var(--line);font-size:13px;vertical-align:top}
+.rules td:first-child{white-space:nowrap;font-weight:600}
+.about p,.about li{font-size:14px;line-height:1.7}
+.about h4{font-size:14px;margin:14px 0 4px}
+.about ul{padding-left:18px}
+.toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:rgba(43,38,34,.94);color:#fff;padding:11px 16px;border-radius:12px;font-size:13px;line-height:1.5;z-index:60;opacity:0;pointer-events:none;transition:all .25s;max-width:360px;width:calc(100% - 48px);display:flex;align-items:center;gap:12px}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.mic{width:76px;height:76px;border-radius:50%;border:none;background:var(--acc);color:#fff;font-size:32px;display:flex;align-items:center;justify-content:center;margin:4px auto 0;cursor:pointer;box-shadow:0 6px 18px rgba(232,131,58,.4)}
+.mic.on{background:var(--red);animation:pulse 1.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(217,83,79,.55)}100%{box-shadow:0 0 0 20px rgba(217,83,79,0)}}
+.vhint{text-align:center;font-size:12px;color:var(--sub);margin-top:8px}
+.egs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.eg{font-size:12px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 8px;cursor:pointer;color:#6d645b}
+.act{background:#fff;border-radius:12px;padding:11px 12px;margin-top:8px;display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.5}
+.act input{margin-top:2px;accent-color:var(--acc);width:18px;height:18px;flex:none}
+.act.off{opacity:.45}
+.opts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.opts .chip{padding:5px 10px;font-size:12px}
+.ans{background:#fff;border-radius:12px;padding:12px 14px;margin-top:12px;font-size:14px;line-height:1.75}
+.micsm{border:none;background:#F4EFE8;border-radius:10px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink)}
+.micsm.on{background:var(--red);color:#fff}
+.btn.danger{background:var(--red)}
+.ti{cursor:pointer}
+.toast .u{color:#FFB77A;font-weight:600;cursor:pointer;flex:none;margin-left:auto}
+</style>
+</head>
+<body>
+<div class="deskhint"><b>喵历</b>手机端原型。建议用手机扫码或直接在手机浏览器打开，可“添加到主屏幕”获得接近App的体验。</div>
+<div class="phone">
+ <header class="hdr">
+  <div class="hrow">
+   <div class="logo">喵历<small id="sub">多猫家庭的健康管家</small></div>
+   <div class="hbtns">
+    <button class="ib sos" onclick="openEm()">✚ 急诊卡</button>
+    <button class="ib" onclick="openAbout()">关于</button>
+   </div>
+  </div>
+  <div class="chips" id="chips"></div>
+ </header>
+ <main id="main"></main>
+</div>
+<nav class="nav">
+ <button data-t="rec" onclick="go('rec')"><span class="ic">📋</span>记录</button>
+ <button data-t="diary" onclick="go('diary')"><span class="ic">📔</span>日记本</button>
+ <button class="plus" onclick="openVoice()">+</button>
+ <button data-t="near" onclick="go('near')"><span class="ic">📍</span>附近</button>
+ <button data-t="me" onclick="go('me')"><span class="ic">🐾</span>我的</button>
+</nav>
+<div class="mask" id="mask" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- 工具 ---------- */
+const DAY=864e5;
+const pad=n=>String(n).padStart(2,'0');
+const fmt=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const TODAY=fmt(new Date());
+const ago=n=>fmt(new Date(parse(TODAY).getTime()-n*DAY));
+const addDays=(s,n)=>fmt(new Date(parse(s).getTime()+n*DAY));
+const diff=(a,b)=>Math.round((parse(a)-parse(b))/DAY);
+const md=s=>{const d=parse(s);const y=d.getFullYear()!==parse(TODAY).getFullYear()?d.getFullYear()+'年':'';return `${y}${d.getMonth()+1}月${d.getDate()}日`};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const $=id=>document.getElementById(id);
+
+const TYPES=['体内驱虫','体外驱虫','三联疫苗','狂犬疫苗','体检'];
+const ICON={'体重':'⚖️','体内驱虫':'💊','体外驱虫':'🧴','三联疫苗':'💉','狂犬疫苗':'💉','体检':'🩺','日记':'📝','里程碑':'🎉'};
+
+/* ---------- 演示数据 ---------- */
+function seed(){
+ const cats=[
+  {id:'c1',name:'橘子',breed:'中华田园猫 · 橘',sex:'公',neutered:true,birthday:ago(4*365+40),adopted:ago(4*365-20),outdoor:false,color:'#EE9A45',allergy:'鸡肉',food:'无谷三文鱼主粮 + 冻干',meds:'无',hospital:'安心动物医院 · 科技园店'},
+  {id:'c2',name:'年糕',breed:'英短蓝白',sex:'母',neutered:true,birthday:ago(2*365+100),adopted:ago(2*365),outdoor:false,color:'#7F9CC0',allergy:'无',food:'鸭肉梨主粮',meds:'化毛膏，每周2次',hospital:'安心动物医院 · 科技园店'},
+  {id:'c3',name:'煤球',breed:'中华田园猫 · 黑',sex:'公',neutered:false,birthday:ago(155),adopted:ago(95),outdoor:false,color:'#3B3633',allergy:'未知',food:'幼猫粮 + 羊奶粉',meds:'无',hospital:'安心动物医院 · 科技园店'},
+ ];
+ const r=[];
+ const R=(cat,type,d,by,extra={})=>r.push({id:uid(),cat,type,date:ago(d),by,...extra});
+ R('c1','体内驱虫',185,'su',{note:'体内驱虫片'});R('c1','体内驱虫',95,'lin',{note:'体内驱虫片'});
+ R('c1','体外驱虫',59,'lin',{note:'体外滴剂'});R('c1','体外驱虫',29,'su',{note:'体外滴剂'});
+ R('c1','三联疫苗',300,'su',{note:'年度加强'});R('c1','狂犬疫苗',300,'su');
+ R('c1','体检',150,'su',{note:'血常规+生化正常，略超重'});
+ [[180,6.0],[120,6.1],[60,6.2],[20,6.3],[5,6.4]].forEach(([d,v])=>R('c1','体重',d,'su',{value:v}));
+ R('c2','体内驱虫',60,'su',{note:'体内驱虫片'});R('c2','体外驱虫',33,'lin',{note:'体外滴剂'});
+ R('c2','三联疫苗',370,'su',{note:'年度加强'});R('c2','狂犬疫苗',200,'su');
+ R('c2','体检',200,'lin',{note:'轻度牙结石'});
+ [[150,4.2],[90,4.2],[45,4.0],[14,3.85],[2,3.75]].forEach(([d,v])=>R('c2','体重',d,'lin',{value:v}));
+ R('c3','三联疫苗',76,'su',{note:'第1针'});R('c3','三联疫苗',48,'su',{note:'第2针'});R('c3','三联疫苗',20,'su',{note:'第3针'});
+ R('c3','狂犬疫苗',20,'su');R('c3','体内驱虫',25,'su',{note:'幼猫驱虫'});R('c3','体外驱虫',10,'lin',{note:'体外滴剂'});
+ [[90,1.3],[60,1.7],[30,2.1],[6,2.5]].forEach(([d,v])=>R('c3','体重',d,'su',{value:v}));
+ const posts=[
+  {id:uid(),cats:['c2'],text:'年糕这两天吃得少了点，早上还吐了一次毛球，晚上又正常干饭。先观察。',date:ago(3),by:'lin',synced:true,pub:false},
+  {id:uid(),cats:['c3'],text:'煤球今天称了2.5kg！跑酷把猫爬架撞歪了，精神好得离谱',date:ago(6),by:'su',synced:true,pub:true},
+  {id:uid(),cats:['c1','c3'],text:'橘子终于接受煤球了，今天两只一起在阳台晒太阳，橘子晒成一张饼',date:ago(12),by:'lin',synced:true,pub:true},
+ ];
+ posts.forEach(p=>p.tags=extract(p.text,cats).tags);
+ return {cats,records:r,posts,members:{su:{name:'小苏',color:'#E8833A'},lin:{name:'小林',color:'#5B8C6E'}},me:'su',introHidden:false};
+}
+
+/* ---------- 状态 ---------- */
+const KEY='meowli_v1';let S;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function load(){try{const s=localStorage.getItem(KEY);if(s){S=JSON.parse(s);return}}catch(e){}S=seed();save()}
+let tab='rec',selCat='all',feedFilter='全部',showAllTodo=false,tlLimit=15,emCat=null,addState={},lastUndo=null,pimg=null;
+
+const cat=id=>S.cats.find(c=>c.id===id);
+const mem=id=>S.members[id]?S.members[id].name:id;
+const other=()=>Object.keys(S.members).find(k=>k!==S.me);
+const inCats=()=>selCat==='all'?S.cats:S.cats.filter(c=>c.id===selCat);
+const av=(c,cls='')=>`<span class="av ${cls}" style="background:${c.color}">${c.name[0]}</span>`;
+const ageM=c=>diff(TODAY,c.birthday)/30.44;
+function ageText(c){const m=Math.floor(ageM(c));return m<12?`${m}个月`:`${Math.floor(m/12)}岁${m%12?m%12+'个月':''}`}
+const recs=(cid,type)=>S.records.filter(r=>r.cat===cid&&r.type===type).sort((a,b)=>a.date<b.date?1:-1);
+const last=(cid,type)=>recs(cid,type)[0];
+const weights=cid=>recs(cid,'体重').slice().reverse();
+
+/* ---------- 提醒规则：带猫的语义 ---------- */
+function interval(c,t){
+ const m=ageM(c);
+ if(t==='体内驱虫')return m<6?30:(c.outdoor?60:90);
+ if(t==='体外驱虫')return 30;
+ if(t==='三联疫苗'||t==='狂犬疫苗')return 365;
+ if(t==='体检')return m>=84?180:365;
+}
+function todos(cs){
+ const out=[];
+ cs.forEach(c=>TYPES.forEach(t=>{
+  const l=last(c.id,t);
+  if(!l){out.push({cat:c,type:t,none:true,days:-999});return}
+  const next=addDays(l.date,interval(c,t));
+  out.push({cat:c,type:t,last:l,next,days:diff(next,TODAY)});
+ }));
+ return out.sort((a,b)=>a.days-b.days);
+}
+
+/* ---------- 文字识别（原型用规则模拟，正式版接大模型） ---------- */
+const KW=[[/吐|呕/,'呕吐',1],[/软便|拉稀|腹泻|不成形/,'软便',1],[/不吃|没.{0,2}胃口|胃口不好|胃口差|食欲差|食欲不好|吃得少|吃得很少/,'食欲下降',1],[/没精神|蔫|嗜睡/,'精神差',1],[/喷嚏|流鼻涕|眼屎/,'呼吸道症状',1],[/干饭|吃得香|食欲好|光盘/,'食欲好',0],[/精神好|活泼|跑酷|拆家/,'精神好',0],[/驱虫/,'驱虫',0],[/洗澡/,'洗澡',0],[/毛球/,'毛球',0],[/晒太阳/,'晒太阳',0]];
+function extract(text,cats=S.cats){
+ const cs=cats.filter(c=>text.includes(c.name)).map(c=>c.id);
+ const tags=[];let weight=null;
+ const m=text.match(/(\d+(?:\.\d+)?)\s*(kg|KG|Kg|公斤|千克|斤)/);
+ if(m){let v=parseFloat(m[1]);if(m[2]==='斤')v=v/2;weight=Math.round(v*100)/100;tags.push({t:`体重${weight}kg`,k:'w'})}
+ KW.forEach(([re,t,w])=>{if(re.test(text))tags.push({t,k:w?'warn':'ok'})});
+ return {cats:cs,tags,weight};
+}
+const tagHtml=t=>`<span class="badge ${t.k==='warn'?'b-red':t.k==='w'?'b-org':'b-green'}">${esc(t.t)}</span>`;
+
+/* ---------- 体重异常 + 与日记交叉 ---------- */
+function weightAlert(c){
+ if(ageM(c)<12)return null;
+ const ws=weights(c.id);if(ws.length<2)return null;
+ const L=ws[ws.length-1];const base=ws.find(w=>diff(L.date,w.date)<=90);
+ if(!base||base===L)return null;
+ const pct=(L.value-base.value)/base.value,days=diff(L.date,base.date);
+ const warns=[...new Set(S.posts.filter(p=>p.cats.includes(c.id)&&diff(TODAY,p.date)<=14).flatMap(p=>(p.tags||[]).filter(t=>t.k==='warn').map(t=>t.t)))];
+ const link=warns.length?`日记里近两周也记录到：${warns.join('、')}。`:'';
+ if(pct<=-0.05)return{lvl:'red',msg:`<b>${c.name}</b> 近${days}天体重从${base.value}kg降到${L.value}kg（${(pct*100).toFixed(1)}%）。${link}成年猫持续掉秤需要留意，建议观察食欲和排便，必要时就医。`};
+ if(pct>=0.08)return{lvl:'org',msg:`<b>${c.name}</b> 近${days}天体重上涨${(pct*100).toFixed(1)}%，可以留意一下食量和运动。`};
+ return null;
+}
+
+/* ---------- 渲染 ---------- */
+function go(t){tab=t;showAllTodo=false;tlLimit=15;render();window.scrollTo(0,0)}
+function render(){
+ document.querySelectorAll('.nav [data-t]').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+ const sub={rec:'多猫家庭的健康管家',diary:'用“晒”带“记”',near:'附近的多猫家庭',me:'档案与共养'}[tab];
+ $('sub').textContent=sub;
+ const showChips=tab==='rec'||tab==='diary';
+ $('chips').style.display=showChips?'flex':'none';
+ $('chips').innerHTML=`<div class="chip ${selCat==='all'?'on':''}" onclick="pick('all')">全部 ${S.cats.length}只</div>`+S.cats.map(c=>`<div class="chip ${selCat===c.id?'on':''}" onclick="pick('${c.id}')">${av(c)}${c.name}</div>`).join('');
+ $('main').innerHTML=tab==='rec'?vRec():tab==='diary'?vDiary():tab==='near'?vNear():vMe();
+ if(tab==='diary')bindCompose();
+}
+function pick(id){selCat=id;render()}
+
+/* 记录 */
+function vRec(){
+ const cs=inCats();
+ let h='';
+ if(!S.introHidden)h+=`<div class="alert info"><span>👋</span><div>这是喵历的可交互原型，预置了3只猫、2位共养主人的演示数据，可以随便点。点底部中间的“+”可以直接说一句话记录，产品思路见右上角“关于”。</div><span class="x" onclick="S.introHidden=true;save();render()">✕</span></div>`;
+ h+=cs.map(weightAlert).filter(Boolean).map(a=>`<div class="alert ${a.lvl}"><span>${a.lvl==='red'?'⚠️':'💡'}</span><div>${a.msg}</div></div>`).join('');
+ const all=todos(cs),near=all.filter(t=>t.days<=14),list=showAllTodo?all:near;
+ const od=all.filter(t=>!t.none&&t.days<0).length;
+ h+=`<div class="card"><h3>护理待办<span class="muted">${od?`<span class="badge b-red">${od}项逾期</span>`:'按年龄和生活方式自动推算'}</span></h3>
+ <div class="todos">${list.length?list.map(todoRow).join(''):'<p class="muted" style="font-size:13px;padding:8px 0">两周内没有待办，猫猫们都很健康</p>'}</div>
+ ${all.length>near.length?`<div class="more" onclick="showAllTodo=!showAllTodo;render()">${showAllTodo?'收起':`查看全部（另有${all.length-near.length}项在两周后）`}</div>`:''}</div>`;
+ h+=`<div class="card"><h3>体重趋势<span class="link" onclick="openAdd('体重')">记体重</span></h3><div class="wgrid">${cs.map(wCard).join('')}</div></div>`;
+ h+=`<div class="card"><h3>成长时间线<span class="muted">自动生成</span></h3>${timeline(cs)}</div>`;
+ return h;
+}
+function todoRow(t){
+ const c=t.cat;let b,s;
+ if(t.none){b='<span class="badge b-grey">暂无记录</span>';s=t.type==='体检'?`${ageText(c)}，建议安排首次体检`:'建议补录一次，之后自动提醒'}
+ else{const d=t.days;
+  b=d<0?`<span class="badge b-red">逾期${-d}天</span>`:d===0?'<span class="badge b-org">今天</span>':d<=7?`<span class="badge b-org">${d}天后</span>`:`<span class="badge b-grey">${d}天后</span>`;
+  s=`上次${md(t.last.date)} · ${mem(t.last.by)}完成${t.last.note?' · '+esc(t.last.note):''}`}
+ const act=t.none?`openAdd('${t.type}','${c.id}')`:`doneTodo('${c.id}','${t.type}')`;
+ return `<div class="todo">${av(c,'lg')}<div class="tx"><div class="t1">${c.name} · ${t.type}${b}</div><div class="t2">${s}</div></div><button class="btn ${!t.none&&t.days>7?'ghost':''}" onclick="${act}">${t.none?'补录':'完成'}</button></div>`;
+}
+function doneTodo(cid,type){
+ const l=last(cid,type);
+ const r={id:uid(),cat:cid,type,date:TODAY,by:S.me,note:l&&l.note&&!/第\d针/.test(l.note)?l.note:''};
+ S.records.push(r);save();render();
+ const next=addDays(TODAY,interval(cat(cid),type));
+ toast(`已记录 ${cat(cid).name}${type}，下次${md(next)}。已同步给${mem(other())}`,rmRecs([r.id]));
+}
+function wCard(c){
+ const ws=weights(c.id);if(!ws.length)return `<div class="wcard" onclick="openAdd('体重','${c.id}')"><div class="wname">${av(c)}${c.name}</div><div class="kg muted">未记录</div></div>`;
+ const L=ws[ws.length-1],P=ws[ws.length-2];
+ const dlt=P?Math.round((L.value-P.value)*100)/100:0;
+ const col=ageM(c)<12?'var(--green)':dlt<0?'var(--red)':dlt>0?'var(--acc)':'var(--sub)';
+ return `<div class="wcard" onclick="openAdd('体重','${c.id}')"><div class="wname">${av(c)}${c.name}<span class="muted" style="margin-left:auto">${md(L.date)}</span></div>
+ <div class="kg">${L.value}kg<small style="color:${col}">${dlt>0?'+':''}${dlt?dlt+'kg':'持平'}</small></div>${spark(ws,c.color)}</div>`;
+}
+function spark(pts,color){
+ if(pts.length<2)return '';
+ const w=140,h=40,p=4,xs=pts.map(q=>parse(q.date).getTime()),ys=pts.map(q=>q.value);
+ const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+ const sx=x=>p+(x-x0)/((x1-x0)||1)*(w-2*p),sy=y=>h-p-(y-y0)/((y1-y0)||1)*(h-2*p);
+ const d=xs.map((x,i)=>`${sx(x).toFixed(1)},${sy(ys[i]).toFixed(1)}`).join(' ');
+ return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${d}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`;
+}
+function timeline(cs){
+ const ids=cs.map(c=>c.id),ev=[];
+ S.records.filter(r=>ids.includes(r.cat)).forEach(r=>{const c=cat(r.cat);
+  ev.push({ref:`openRec('${r.id}')`,date:r.date,color:c.color,who:c.name,title:`${ICON[r.type]} ${r.type==='体重'?`体重 ${r.value}kg`:r.type}`,sub:[r.note,`${mem(r.by)}记录`].filter(Boolean).join(' · ')})});
+ S.posts.filter(p=>p.synced&&p.cats.some(i=>ids.includes(i))).forEach(p=>{const c=cat(p.cats[0]);
+  ev.push({ref:`delPost('${p.id}')`,date:p.date,color:c.color,who:p.cats.map(i=>cat(i).name).join('、'),title:`📝 ${esc(p.text.length>40?p.text.slice(0,40)+'…':p.text)}`,sub:'来自日记本',img:p.img})});
+ cs.forEach(c=>{
+  ev.push({date:c.adopted,color:c.color,who:c.name,title:`🏠 ${c.name}到家啦`,ms:1});
+  for(let k=1;;k++){const d=addDays(c.adopted,Math.round(k*365.25));if(d>TODAY)break;ev.push({date:d,color:c.color,who:c.name,title:`🎉 到家${k}周年`,ms:1})}
+  const n=Math.floor(ageM(c));if(n<12)[3,4,5].forEach(m=>{if(n>=m){const d=addDays(c.birthday,Math.round(m*30.44));ev.push({date:d,color:c.color,who:c.name,title:`🎂 满${m}个月`,ms:1})}});
+ });
+ ev.sort((a,b)=>a.date<b.date?1:-1);
+ const shown=ev.slice(0,tlLimit);
+ return `<div class="tl">${shown.map(e=>`<div class="ti ${e.ms?'ms':''}" style="--dot:${e.color}" onclick="${e.ref||"toast('里程碑根据档案自动生成')"}"><div class="d">${md(e.date)} · ${e.who}</div><div class="c">${e.title}${e.sub?`<br><span class="s">${esc(e.sub)}</span>`:''}</div>${e.img?`<img class="thumb" src="${e.img}">`:''}</div>`).join('')}</div>
+ ${ev.length>tlLimit?`<div class="more" onclick="tlLimit+=15;render()">加载更早的记录</div>`:''}`;
+}
+
+/* 日记本 */
+function vDiary(){
+ const ps=S.posts.filter(p=>selCat==='all'||p.cats.includes(selCat)).sort((a,b)=>a.date<b.date?1:-1);
+ return `<div class="card">
+  <textarea id="ptext" placeholder="今天猫猫怎么样？写上名字、体重、吃喝拉撒，会自动识别并归档到档案。比如：年糕今天称了3.8kg，有点软便"></textarea>
+  <div class="prev" id="pprev"><span class="muted">识别结果会显示在这里</span></div>
+  <div id="pimgw"></div>
+  <div class="crow">
+   <button class="micsm" onclick="dictate(this)">🎙️ 说</button><label class="btn ghost">📷 图片<input type="file" accept="image/*" id="pimg" hidden></label>
+   <label class="ck"><input type="checkbox" id="psync" checked>同步到时间线</label>
+   <label class="ck"><input type="checkbox" id="ppub">公开到附近</label>
+   <button class="btn" style="margin-left:auto" onclick="post()">发布</button>
+  </div></div>
+ ${ps.map(p=>`<div class="card post"><div class="ph">${p.cats.map(i=>av(cat(i))).join('')}<b>${p.cats.map(i=>cat(i).name).join('、')}</b><span class="muted">· ${mem(p.by)} · ${md(p.date)}</span></div>
+  <div class="txt">${esc(p.text)}</div>${p.img?`<img class="thumb" src="${p.img}">`:''}
+  ${p.tags&&p.tags.length?`<div class="tags"><span class="muted" style="font-size:12px">已提取</span>${p.tags.map(tagHtml).join('')}</div>`:''}
+  <div class="pf">${p.synced?'<span class="badge b-green">已同步时间线</span>':''}${p.pub?'<span class="badge b-org">已公开到附近</span>':'<span class="badge b-grey">仅共养成员可见</span>'}<span class="link" style="margin-left:auto" onclick="delPost('${p.id}')">删除</span></div></div>`).join('')||'<p class="muted" style="text-align:center;margin-top:30px">还没有日记</p>'}`;
+}
+function bindCompose(){
+ const t=$('ptext');pimg=null;
+ t.oninput=()=>{const ex=extract(t.value);const cs=ex.cats.length?ex.cats:(selCat!=='all'?[selCat]:[]);
+  $('pprev').innerHTML=t.value.trim()?`<span class="muted">识别到</span>${cs.length?cs.map(i=>`<span class="badge b-grey">${cat(i).name}</span>`).join(''):'<span class="badge b-grey">未识别到猫名</span>'}${ex.tags.map(tagHtml).join('')}`:'<span class="muted">识别结果会显示在这里</span>'};
+ $('pimg').onchange=e=>{const f=e.target.files[0];if(!f)return;compress(f,u=>{pimg=u;$('pimgw').innerHTML=`<img class="thumb" src="${u}">`})};
+}
+function compress(file,cb){const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const s=Math.min(1,720/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=img.width*s;cv.height=img.height*s;cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);cb(cv.toDataURL('image/jpeg',.72))};img.src=e.target.result};r.readAsDataURL(file)}
+function post(){
+ const text=$('ptext').value.trim();if(!text&&!pimg){toast('写点什么或者选张图片吧');return}
+ const ex=extract(text);const cs=ex.cats.length?ex.cats:(selCat!=='all'?[selCat]:[]);
+ if(!cs.length){toast('没认出是哪只猫。在文字里带上名字，或先在上方选中一只猫');return}
+ const synced=$('psync').checked,pub=$('ppub').checked;
+ const p={id:uid(),cats:cs,text,date:TODAY,by:S.me,synced,pub,tags:ex.tags,img:pimg,recIds:[]};S.posts.push(p);
+ const msgs=['已发布'];
+ if(synced&&ex.weight&&cs.length===1){const r={id:uid(),cat:cs[0],type:'体重',date:TODAY,by:S.me,value:ex.weight,note:'来自日记'};S.records.push(r);p.recIds.push(r.id);msgs.push(`体重${ex.weight}kg已记入${cat(cs[0]).name}的档案`)}
+ msgs.push(...warnMsgs(cs,ex.tags));
+ save();render();toast(msgs.join('；'),()=>{S.posts=S.posts.filter(x=>x.id!==p.id);rmRecs(p.recIds)()});
+}
+
+/* 附近 */
+const MATCH=[
+ {name:'三喵之家',who:'阿May',dist:'0.6km',cats:'英短 · 布偶 · 田园',why:['同样养3只猫','常去同一家医院','可互助上门喂猫'],score:92,color:'#C77DAE'},
+ {name:'豆包和麻薯',who:'豆包妈',dist:'1.1km',cats:'美短 · 田园幼猫',why:['家里也有幼猫','可以换粮试吃'],score:84,color:'#6FA38A'},
+ {name:'黑猫事务所',who:'Leo',dist:'2.3km',cats:'4只田园黑猫',why:['也养黑猫','可寄养互换'],score:77,color:'#555'},
+];
+const FEED=[
+ {tag:'互助',who:'阿May · 三喵之家',dist:'0.6km',time:'2小时前',text:'国庆要出门5天，求科技园附近能上门喂猫的邻居，可以互换，节后我也能帮你喂。',n:4},
+ {tag:'口碑',who:'豆包妈',dist:'1.1km',time:'昨天',text:'半夜两点带猫去安心动物医院急诊，有值班医生，先拍片再报价，流程挺清楚。建议提前备好疫苗和驱虫记录，医生第一句就问这个。',n:12},
+ {tag:'互助',who:'Leo · 黑猫事务所',dist:'2.3km',time:'昨天',text:'屯了两袋幼猫粮试吃装，自家猫不爱吃，送给附近有幼猫的家庭。',n:6},
+ {tag:'口碑',who:'七七',dist:'1.8km',time:'3天前',text:'科技园附近两家医院的绝育我都问过了，一家含术前检查，一家要另算，问的时候记得确认清楚。',n:9},
+];
+function vNear(){
+ const mine=S.posts.filter(p=>p.pub).sort((a,b)=>a.date<b.date?1:-1).map(p=>({tag:'日常',who:`${mem(p.by)} · ${p.cats.map(i=>cat(i).name).join('、')}`,dist:'你',time:md(p.date),text:p.text,img:p.img,n:0}));
+ const feed=[...FEED,...mine].filter(f=>feedFilter==='全部'||f.tag===feedFilter);
+ return `<div class="card" style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">📍</span><div><b>深圳 · 南山科技园一带</b><div class="t2">位置只精确到商圈，不会显示你的小区</div></div></div>
+ <div class="card"><h3>和你相似的多猫家庭<span class="muted">按猫数、医院、需求匹配</span></h3>
+ <div class="mscroll">${MATCH.map(m=>`<div class="mc"><div style="display:flex;align-items:center;gap:8px"><span class="av lg" style="background:${m.color}">${m.name[0]}</span><div><div class="nm">${m.name}</div><div class="t2">${m.who} · ${m.dist}</div></div></div>
+  <div class="t2" style="margin-top:10px">${m.cats}</div><div class="tags">${m.why.map(w=>`<span class="badge b-grey">${w}</span>`).join('')}</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px"><span class="score">匹配度 ${m.score}%</span><button class="btn" onclick="toast('已向${m.who}打招呼，对方通过后可以私信')">打招呼</button></div></div>`).join('')}</div></div>
+ <div class="card"><h3>附近动态</h3><div class="chips" style="padding-top:0">${['全部','互助','口碑','日常'].map(t=>`<div class="chip ${feedFilter===t?'on':''}" onclick="feedFilter='${t}';render()">${t}</div>`).join('')}</div>
+ ${feed.map(f=>`<div class="feed"><div class="fh"><span class="badge ${f.tag==='互助'?'b-org':f.tag==='口碑'?'b-green':'b-grey'}">${f.tag}</span>${esc(f.who)} · ${f.dist==='你'?'我发布的':f.dist} · ${f.time}</div><div class="ft">${esc(f.text)}</div>${f.img?`<img class="thumb" src="${f.img}">`:''}${f.dist!=='你'?`<div class="pf"><span class="link" onclick="toast('已回应，对方会收到通知')">回应</span><span class="muted">${f.n}人回应</span></div>`:''}</div>`).join('')||'<p class="muted" style="font-size:13px">暂无</p>'}</div>`;
+}
+
+/* 我的 */
+function vMe(){
+ const m=S.members[S.me];
+ return `<div class="card"><div style="display:flex;align-items:center;gap:12px"><span class="av xl" style="background:${m.color}">${m.name[1]}</span><div><div style="font-size:18px;font-weight:700">${m.name}</div><div class="t2">深圳 · 南山 · 养猫5年</div></div></div>
+ <div class="stats"><div><b>${S.cats.length}</b><span>只猫</span></div><div><b>${Object.keys(S.members).length-1}</b><span>位共养成员</span></div><div><b>12</b><span>位宠友</span></div><div><b>${S.records.length}</b><span>条记录</span></div></div></div>
+ <div class="card"><h3>猫猫档案<span class="link" onclick="toast('原型暂未开放新增猫咪')">添加</span></h3>
+ ${S.cats.map(c=>`<div class="row" onclick="openArchive('${c.id}')">${av(c,'lg')}<div class="grow"><b>${c.name}</b><div class="t2">${c.breed} · ${ageText(c)} · ${c.outdoor?'偶尔外出':'纯室内'}${c.allergy!=='无'&&c.allergy!=='未知'?` · 过敏：${c.allergy}`:''}</div></div><span class="chev">›</span></div>`).join('')}</div>
+ <div class="card"><h3>共养家庭<span class="muted">记录实时同步</span></h3>
+ <div class="t2" style="margin-bottom:8px">当前以谁的身份操作（演示切换）</div>
+ <div class="seg">${Object.entries(S.members).map(([k,v])=>`<div class="${S.me===k?'on':''}" onclick="S.me='${k}';save();render();toast('已切换为${v.name}')">${v.name}</div>`).join('')}</div>
+ <div class="t2" style="margin-top:10px">最近30天：${Object.entries(S.members).map(([k,v])=>`${v.name}完成${S.records.filter(r=>r.by===k&&diff(TODAY,r.date)<=30).length}项`).join('，')}</div>
+ <div class="row" style="margin-top:6px" onclick="toast('邀请链接已复制（演示）')"><span style="font-size:20px">➕</span><div class="grow">邀请共养成员</div><span class="chev">›</span></div></div>
+ <div class="card"><div class="row" onclick="openRules()"><span style="font-size:20px">⏰</span><div class="grow">提醒规则<div class="t2">按年龄、生活方式自动推算</div></div><span class="chev">›</span></div>
+ <div class="row" onclick="openAbout()"><span style="font-size:20px">💡</span><div class="grow">关于喵历</div><span class="chev">›</span></div>
+ <div class="row" onclick="exportData()"><span style="font-size:20px">⤓</span><div class="grow">导出全部数据<div class="t2">档案属于你，随时带走</div></div><span class="chev">›</span></div>
+ <div class="row" onclick="if(confirm('恢复为初始演示数据？')){localStorage.removeItem(KEY);S=seed();save();selCat='all';render();toast('已恢复演示数据')}"><span style="font-size:20px">↺</span><div class="grow">恢复演示数据</div><span class="chev">›</span></div></div>`;
+}
+
+/* ---------- 弹层 ---------- */
+function sheet(h){$('sheet').innerHTML=h;$('sheet').classList.add('on');$('mask').classList.add('on')}
+function closeSheet(){stopRec();$('sheet').classList.remove('on');$('mask').classList.remove('on')}
+
+function openAdd(type,cid){addState={type:type||'体重',cat:cid||(selCat!=='all'?selCat:S.cats[0].id),date:TODAY,value:'',note:'',scan:null};renderAdd()}
+function renderAdd(){
+ const a=addState;
+ sheet(`<div class="shd"><b>手动记录</b><span class="muted" onclick="closeSheet()">关闭</span></div>
+ <label class="fl" style="margin-top:0">哪只猫</label><div class="tgrid">${S.cats.map(c=>`<div class="chip ${a.cat===c.id?'on':''}" onclick="addState.cat='${c.id}';renderAdd()">${av(c)}${c.name}</div>`).join('')}</div>
+ <label class="fl">记录什么</label><div class="tgrid">${['体重',...TYPES].map(t=>`<div class="chip ${a.type===t?'on':''}" onclick="addState.type='${t}';renderAdd()">${ICON[t]} ${t}</div>`).join('')}</div>
+ <label class="fl">日期</label><input class="inp" type="date" value="${a.date}" max="${TODAY}" onchange="addState.date=this.value">
+ ${a.type==='体重'?`<label class="fl">体重（kg）</label><input class="inp" type="number" step="0.01" inputmode="decimal" value="${esc(a.value)}" oninput="addState.value=this.value" placeholder="比如 4.25">`:`<label class="fl">备注</label><input class="inp" value="${esc(a.note)}" oninput="addState.note=this.value" placeholder="药名、医院、检查结果">`}
+ <label class="scanbtn">📷 拍疫苗本 / 体检单 / 药盒，自动识别（演示）<input type="file" accept="image/*" hidden onchange="scanDemo(this)"></label>
+ ${a.scan==='ing'?'<div class="scan">🔍 正在识别…</div>':a.scan==='ok'?`<div class="scan ok">✅ 识别到：猫三联疫苗，${md(a.date)}接种，安心动物医院。请核对后保存</div>`:''}
+ <button class="btn block" onclick="saveAdd()">保存</button>
+ <button class="btn ghost block" style="margin-top:8px" onclick="closeSheet();go('diary');setTimeout(()=>$('ptext').focus(),50)">✍️ 写一条日记</button>
+ <p class="muted tiny">保存后同步给共养成员，并自动推算下一次时间</p>
+ <div class="link" style="text-align:center;margin-top:10px" onclick="openVoice()">改用说一句话</div>`);
+}
+function scanDemo(inp){if(!inp.files[0])return;addState.scan='ing';renderAdd();setTimeout(()=>{Object.assign(addState,{type:'三联疫苗',date:TODAY,note:'猫三联 · 安心动物医院',scan:'ok'});renderAdd()},1300)}
+function saveAdd(){
+ const a=addState;const r={id:uid(),cat:a.cat,type:a.type,date:a.date||TODAY,by:S.me};
+ if(a.type==='体重'){const v=parseFloat(a.value);if(!(v>0.1&&v<20)){toast('请填写正确的体重');return}r.value=Math.round(v*100)/100}else r.note=a.note.trim();
+ S.records.push(r);save();closeSheet();render();
+ const c=cat(a.cat);
+ toast(a.type==='体重'?`已记录 ${c.name} ${r.value}kg`:`已记录 ${c.name}${a.type}，下次${md(addDays(r.date,interval(c,a.type)))}`,rmRecs([r.id]));
+}
+
+function openEm(id){emCat=id||emCat||(selCat!=='all'?selCat:S.cats[0].id);const c=cat(emCat);
+ const L=t=>{const l=last(c.id,t);return l?`${md(l.date)}${l.note?' · '+esc(l.note):''}`:'无记录'};
+ const ws=weights(c.id),w=ws[ws.length-1];const al=weightAlert(c);
+ sheet(`<div class="shd"><b>急诊卡</b><span class="muted" onclick="closeSheet()">关闭</span></div>
+ <div class="tgrid">${S.cats.map(x=>`<div class="chip ${x.id===c.id?'on':''}" onclick="openEm('${x.id}')">${av(x)}${x.name}</div>`).join('')}</div>
+ <div class="emhd" style="margin-top:12px">${av(c,'lg')}<div><div style="font-size:18px;font-weight:700">${c.name}</div><div style="font-size:13px;opacity:.9">${c.breed} · ${c.sex}${c.neutered?'（已绝育）':'（未绝育）'} · ${ageText(c)}</div></div></div>
+ <div class="em">
+  <div class="r hot"><span>过敏</span><span>${esc(c.allergy)}</span></div>
+  <div class="r"><span>在用药</span><span>${esc(c.meds)}</span></div>
+  <div class="r"><span>体重</span><span>${w?`${w.value}kg（${md(w.date)}）`:'无记录'}${al&&al.lvl==='red'?'<br><span style="color:var(--red);font-size:12px">近期持续下降</span>':''}</span></div>
+  <div class="r"><span>狂犬疫苗</span><span>${L('狂犬疫苗')}</span></div>
+  <div class="r"><span>猫三联</span><span>${L('三联疫苗')}</span></div>
+  <div class="r"><span>体内驱虫</span><span>${L('体内驱虫')}</span></div>
+  <div class="r"><span>体外驱虫</span><span>${L('体外驱虫')}</span></div>
+  <div class="r"><span>最近体检</span><span>${L('体检')}</span></div>
+  <div class="r"><span>日常饮食</span><span>${esc(c.food)}</span></div>
+  <div class="r"><span>常去医院</span><span>${esc(c.hospital)}</span></div>
+  <div class="r"><span>主人</span><span>${Object.values(S.members).map(m=>m.name).join('、')} · 138****6621</span></div>
+ </div>
+ <button class="btn block" onclick="copyEm()">复制文字，发给医生或寄养店</button>
+ <p class="muted tiny">不用登录、不用翻相册，一屏看完</p>`);
+}
+function copyEm(){const c=cat(emCat);const L=t=>{const l=last(c.id,t);return l?l.date+(l.note?' '+l.note:''):'无记录'};const ws=weights(c.id),w=ws[ws.length-1];
+ const txt=`急诊卡 · ${c.name}\n${c.breed}，${c.sex}${c.neutered?'，已绝育':'，未绝育'}，${ageText(c)}\n过敏：${c.allergy}\n在用药：${c.meds}\n体重：${w?w.value+'kg（'+w.date+'）':'无记录'}\n狂犬疫苗：${L('狂犬疫苗')}\n猫三联：${L('三联疫苗')}\n体内驱虫：${L('体内驱虫')}\n体外驱虫：${L('体外驱虫')}\n最近体检：${L('体检')}\n日常饮食：${c.food}\n常去医院：${c.hospital}`;
+ const ok=()=>toast('已复制，可以直接粘贴发送');
+ if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(txt).then(ok,()=>fb());else fb();
+ function fb(){const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(e){toast('复制失败，请截图保存')}t.remove()}
+}
+
+function openArchive(id){const c=cat(id);
+ sheet(`<div class="shd"><b>${c.name}的档案</b><span class="muted" onclick="closeSheet()">关闭</span></div>
+ <div class="card" style="margin-top:0;display:flex;align-items:center;gap:12px">${av(c,'xl')}<div><div style="font-size:18px;font-weight:700">${c.name}</div><div class="t2">${c.breed} · ${c.sex} · ${c.neutered?'已绝育':'未绝育'}<br>生日 ${md(c.birthday)} · ${ageText(c)} · 到家 ${md(c.adopted)}</div></div></div>
+ <label class="fl">生活方式（影响驱虫提醒频率）</label>
+ <div class="seg"><div class="${!c.outdoor?'on':''}" onclick="setOut('${id}',false)">纯室内</div><div class="${c.outdoor?'on':''}" onclick="setOut('${id}',true)">偶尔外出</div></div>
+ <label class="fl">过敏</label><input class="inp" id="a_allergy" value="${esc(c.allergy)}">
+ <label class="fl">在吃的粮</label><input class="inp" id="a_food" value="${esc(c.food)}">
+ <label class="fl">在用药</label><input class="inp" id="a_meds" value="${esc(c.meds)}">
+ <label class="fl">常去医院</label><input class="inp" id="a_hosp" value="${esc(c.hospital)}">
+ <button class="btn block" onclick="saveArchive('${id}')">保存</button>
+ <button class="btn ghost block" style="margin-top:8px" onclick="openEm('${id}')">查看急诊卡</button>`);
+}
+function setOut(id,v){const c=cat(id);c.outdoor=v;save();openArchive(id);render();toast(`${c.name}体内驱虫已调整为每${interval(c,'体内驱虫')}天一次`)}
+function saveArchive(id){const c=cat(id);c.allergy=$('a_allergy').value.trim()||'无';c.food=$('a_food').value.trim();c.meds=$('a_meds').value.trim()||'无';c.hospital=$('a_hosp').value.trim();save();closeSheet();render();toast('档案已更新，已同步给共养成员')}
+
+function openRules(){
+ sheet(`<div class="shd"><b>提醒规则</b><span class="muted" onclick="closeSheet()">关闭</span></div>
+ <div class="card" style="margin-top:0"><table class="rules" style="width:100%;border-collapse:collapse">
+ <tr><td>体内驱虫</td><td>6月龄内每30天；成猫纯室内每90天，偶尔外出每60天</td></tr>
+ <tr><td>体外驱虫</td><td>每30天</td></tr>
+ <tr><td>猫三联</td><td>幼猫按针次完成后，每年加强一次</td></tr>
+ <tr><td>狂犬疫苗</td><td>每年一次</td></tr>
+ <tr><td>体检</td><td>7岁以下每年一次，7岁以上每半年一次</td></tr></table></div>
+ <p class="muted" style="font-size:12px;line-height:1.6;margin-top:10px">下一次时间从最近一次记录自动推算，年龄变化和生活方式调整后会自动重新计算。规则参考常见建议，具体以你的兽医意见为准。</p>`);
+}
+
+function openAbout(){
+ sheet(`<div class="shd"><b>关于喵历</b><span class="muted" onclick="closeSheet()">关闭</span></div>
+ <div class="card about" style="margin-top:0">
+ <p><b>喵历：多猫家庭的健康档案与周期护理</b></p>
+ <h4>目标用户</h4><p>养2只以上的猫、和伴侣或室友一起养的“老手”。只做猫，不做新手科普。</p>
+ <h4>核心痛点</h4>
+ <ul><li><b>健康档案散落，急用时翻不到。</b>疫苗本是纸的，驱虫记在备忘录，体检单在微信收藏，体重偶尔拍在相册。半夜急诊或换医院时说不清上次狂犬、三联打在哪天；共养时记录只在一个人手机里。</li>
+ <li><b>周期护理靠记忆，忘了才出事。</b>体内驱虫约三个月，体外每月，疫苗每年加强，加班后最容易漏。通用日历没有猫的年龄、室内还是外出这些语义，提醒常被划掉。</li></ul>
+ <h4>设计主张</h4><p>记录零成本，数据有回报，急用一屏看完，共养实时同步。</p>
+ <h4>对应设计</h4>
+ <ul><li>记录页首屏是跨猫合并的护理待办，下次时间按年龄和生活方式自动推算，一键完成并同步共养成员</li>
+ <li>顶栏常驻急诊卡：过敏、疫苗、驱虫、体重趋势一屏看完，可复制发给医生</li>
+ <li>日记本用“晒”带“记”：从文字识别猫名、体重和异常症状，自动归档，并与体重趋势交叉提示</li>
+ <li>底部“+”默认是一句话记录：说出“橘子和年糕今天都滴了体外驱虫”，自动拆成两条记录，确认一次保存；有歧义时只追问缺的那一项。也能直接问“橘子上次打狂犬是什么时候”</li>
+ <li>所有记录和日记都能删除，提醒按剩下的记录自动重算，支持撤销和导出数据</li>
+ <li>附近按商圈级模糊定位，匹配相似的多猫家庭，围绕喂猫互助和医院口碑</li></ul>
+ <h4>原型说明</h4><p>数据保存在当前浏览器；文字识别和拍照识别为规则模拟，正式版接入多模态大模型；语音用浏览器自带识别，iPhone的Safari可用，不支持时可用输入法的语音键。</p></div>`);
+}
+
+let tt;
+function toast(msg,undoFn){const t=$('toast');lastUndo=undoFn||null;t.innerHTML=`<span>${msg}</span>${undoFn?'<span class="u" onclick="undo()">撤销</span>':''}`;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),undoFn?4500:2800)}
+function undo(){if(!lastUndo)return;lastUndo();lastUndo=null;save();render();$('toast').classList.remove('on')}
+const rmRecs=ids=>()=>{S.records=S.records.filter(r=>!ids.includes(r.id))};
+
+/* ---------- 语音与一句话记录 ---------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null;
+function stopRec(){if(rec){try{rec.abort()}catch(e){}rec=null}}
+function listen(btn,onText){
+ if(rec){try{rec.stop()}catch(e){}return}
+ if(!SR){toast('这个浏览器不支持网页语音，可以点输入框，用输入法自带的语音键说话');return}
+ try{rec=new SR()}catch(e){toast('语音启动失败，可以用输入法的语音键');return}
+ rec.lang='zh-CN';rec.interimResults=true;rec.continuous=false;
+ rec.onresult=e=>{let t='';for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;onText(t)};
+ rec.onerror=e=>{toast(/allowed/.test(e.error)?'没有麦克风权限，请在浏览器设置里允许':e.error==='network'?'语音服务连不上，可以用输入法自带的语音键代替':e.error==='no-speech'?'没听到声音，再试一次':'语音识别出错，可以用输入法的语音键')};
+ rec.onend=()=>{rec=null;document.querySelectorAll('.mic,.micsm').forEach(b=>b.classList.remove('on'));const m=$('micl');if(m)m.textContent='点一下开始说话'};
+ try{rec.start()}catch(e){rec=null;return}
+ btn.classList.add('on');const m=$('micl');if(m)m.textContent='正在听，说完会自动停';
+}
+function dictate(btn){const t=$('ptext');const base=t.value?t.value+'，':'';listen(btn,x=>{t.value=base+x;t.oninput()})}
+
+const CN={零:0,一:1,二:2,两:2,三:3,四:4,五:5,六:6,七:7,八:8,九:9};
+function cnInt(s){if(s==='十')return 10;if(s[0]==='十')return 10+CN[s[1]];if(s.includes('十')){const[a,b]=s.split('十');return CN[a]*10+(b?CN[b]:0)}return +[...s].map(x=>CN[x]).join('')}
+function cnNum(t){
+ t=t.replace(/([一二两三四五六七八九十]+)点([零一二三四五六七八九]+)/g,(m,a,b)=>cnInt(a)+'.'+[...b].map(x=>CN[x]).join(''));
+ t=t.replace(/([一二两三四五六七八九十]+)(?=(公斤|千克|斤|天前))/g,(m,a)=>cnInt(a));
+ return t.replace(/(\d+(?:\.\d+)?)(公斤|千克|斤)半/g,(m,a,u)=>(parseFloat(a)+.5)+u);
+}
+const dayWord=d=>{const n=diff(TODAY,d);return n===0?'今天':n===1?'昨天':n===2?'前天':md(d)};
+function catsIn(t){const cs=S.cats.filter(c=>t.includes(c.name)).map(c=>c.id);if(!cs.length&&/都|全部|所有|每只|三只|大家/.test(t))return S.cats.map(c=>c.id);return cs}
+function warnMsgs(cs,tags){const out=[];tags.filter(t=>t.k==='warn').forEach(t=>cs.forEach(cid=>{const n=S.posts.filter(p=>p.cats.includes(cid)&&diff(TODAY,p.date)<=7&&(p.tags||[]).some(x=>x.t===t.t)).length;if(n>=2)out.push(`${cat(cid).name}7天内第${n}次出现${t.t}，建议留意，必要时就医`)}));return out}
+
+function parseCmd(raw){
+ const text=cnNum(raw),all=catsIn(text),fb=selCat!=='all'?[selCat]:[];
+ if(/急诊卡/.test(text))return{kind:'em',cat:all[0]||fb[0]||S.cats[0].id};
+ if(/上次|什么时候|哪天|多久|多重|几斤|多少斤|多少公斤|下次/.test(text))return{kind:'query',html:answer(text,all.length?all:(fb.length?fb:S.cats.map(c=>c.id)))};
+ const off=/前天/.test(text)?2:/昨天|昨晚/.test(text)?1:(text.match(/(\d+)天前/)||[0,0])[1]*1;
+ const date=ago(off),acts=[];let prev=all.length?[]:fb,gid=0;
+ const reIn=/体内|内驱|驱虫药|药片|吃了驱虫/,reOut=/体外|外驱|滴剂|滴了|滴的/;
+ const wIn=reIn.test(text),wOut=reOut.test(text),both=/内外/.test(text);
+ text.split(/[，,。；;！!？?\n]|然后|另外|还有/).filter(x=>x.trim()).forEach(cl=>{
+  let cs=catsIn(cl);if(!cs.length)cs=prev;else prev=cs;
+  const push=(type,ex={})=>(cs.length?cs:[null]).forEach(c=>acts.push({on:true,type,cat:c,date,...ex}));
+  const wm=cl.match(/(\d+(?:\.\d+)?)\s*(kg|KG|Kg|公斤|千克|斤)/);
+  if(wm){let v=parseFloat(wm[1]);if(wm[2]==='斤')v/=2;push('体重',{value:Math.round(v*100)/100})}
+  if(/驱虫|驱了|滴了|滴剂|打虫/.test(cl)){
+   const ci=reIn.test(cl),co=reOut.test(cl);
+   if(both||(ci&&co)){push('体内驱虫');push('体外驱虫')}
+   else if(ci||(!co&&wIn&&!wOut))push('体内驱虫');
+   else if(co||(wOut&&!wIn))push('体外驱虫');
+   else push('驱虫',{opts:['体内驱虫','体外驱虫','内外都做了'],g:++gid,gname:'驱虫，体内还是体外？'});
+  }
+  if(/疫苗|打针|三联|狂犬/.test(cl)){
+   const a=/三联/.test(cl),b=/狂犬/.test(cl);
+   if(a)push('三联疫苗');if(b)push('狂犬疫苗');
+   if(!a&&!b)push('疫苗',{opts:['三联疫苗','狂犬疫苗','两针都打了'],g:++gid,gname:'疫苗，打的哪一针？'});
+  }
+  if(/体检/.test(cl))push('体检');
+ });
+ const tags=extract(text).tags.filter(t=>t.k!=='w'&&t.t!=='驱虫');
+ if(tags.length||!acts.length)acts.push({on:true,type:'日记',cats:all.length?all:fb,text:raw.trim(),tags,date});
+ return{kind:'act',acts};
+}
+function answer(text,cs){
+ let ty=[];
+ if(/狂犬/.test(text))ty.push('狂犬疫苗');if(/三联/.test(text))ty.push('三联疫苗');
+ if(/疫苗|打针/.test(text)&&!ty.length)ty.push('三联疫苗','狂犬疫苗');
+ if(/体内/.test(text))ty.push('体内驱虫');if(/体外|滴/.test(text))ty.push('体外驱虫');
+ if(/驱虫/.test(text)&&!/体内|体外/.test(text))ty.push('体内驱虫','体外驱虫');
+ if(/体检/.test(text))ty.push('体检');
+ const w=/多重|几斤|多少斤|多少公斤|体重/.test(text);
+ if(!ty.length&&!w)ty=[...TYPES];
+ return cs.map(id=>{const c=cat(id),ls=[];
+  if(w){const ws=weights(id),L=ws[ws.length-1];ls.push(L?`体重：${L.value}kg（${md(L.date)}）`:'体重：还没有记录')}
+  ty.forEach(t=>{const l=last(id,t);if(!l){ls.push(`${t}：没有记录`);return}const nx=addDays(l.date,interval(c,t)),d=diff(nx,TODAY);ls.push(`${t}：${md(l.date)}，${mem(l.by)}记录。下次${md(nx)}${d<0?`<span style="color:var(--red)">（已逾期${-d}天）</span>`:''}`)});
+  return `<b>${c.name}</b><br>${ls.join('<br>')}`}).join('<br><br>');
+}
+
+const EGS=['橘子和年糕今天都滴了体外驱虫','年糕称了三点七公斤','煤球昨天打了狂犬疫苗','年糕今天又吐了，没什么胃口','橘子上次打狂犬是什么时候','打开年糕的急诊卡'];
+let vText='',vRes=null;
+function openVoice(){vText='';vRes=null;renderVoice()}
+function renderVoice(){
+ sheet(`<div class="shd"><b>说一句话记录</b><span class="muted" onclick="closeSheet()">关闭</span></div>
+ <button class="mic" onclick="listen(this,t=>{$('vtext').value=t;vInput()})">🎙️</button>
+ <div class="vhint" id="micl">${SR?'点一下开始说话':'点下面的输入框，用输入法的语音键说'}</div>
+ <textarea id="vtext" style="margin-top:12px;min-height:64px" placeholder="比如：橘子和年糕今天都滴了体外驱虫" oninput="vInput()">${esc(vText)}</textarea>
+ <div class="egs"><span class="muted" style="font-size:12px;padding:5px 0">试试：</span>${EGS.map(e=>`<span class="eg" onclick="$('vtext').value='${e}';vInput()">${e}</span>`).join('')}</div>
+ <div id="vres"></div>
+ <div class="link" style="text-align:center;margin-top:16px" onclick="openAdd()">改用手动填写</div>`);
+ if(vText)vInput();
+}
+function vInput(){vText=$('vtext').value;const box=$('vres');if(!vText.trim()){box.innerHTML='';vRes=null;return}
+ vRes=parseCmd(vText);
+ if(vRes.kind==='query'){box.innerHTML=`<div class="ans">${vRes.html}</div>`;return}
+ if(vRes.kind==='em'){box.innerHTML=`<button class="btn block danger" onclick="openEm('${vRes.cat}')">打开${cat(vRes.cat).name}的急诊卡</button>`;return}
+ drawActs();
+}
+function drawActs(){const A=vRes.acts,n=A.filter(a=>a.on).length;
+ $('vres').innerHTML=`<label class="fl">识别结果，确认后一次保存</label>${A.map(actRow).join('')}<button class="btn block" ${n?'':'disabled style="opacity:.5"'} onclick="confirmVoice()">确认保存（${n}项）</button>`;
+}
+function actRow(a,i){
+ const c=a.cat?cat(a.cat):null;let label,extra='';
+ if(a.type==='日记'){label=`📝 记到日记本：${a.cats.length?a.cats.map(x=>cat(x).name).join('、'):'哪只猫？'}${a.tags.length?' · '+a.tags.map(t=>t.t).join('、'):''}`;
+  if(!a.cats.length)extra=`<div class="opts">${S.cats.map(x=>`<span class="chip" onclick="setActCat(${i},'${x.id}')">${av(x)}${x.name}</span>`).join('')}</div>`}
+ else{label=`${ICON[a.type]||(a.opts&&a.type==='驱虫'?'💊':'💉')} ${c?c.name:'哪只猫？'} · ${a.opts?a.gname:a.type}${a.type==='体重'?' '+a.value+'kg':''} · ${dayWord(a.date)}`;
+  if(a.opts)extra+=`<div class="opts">${a.opts.map(o=>`<span class="chip" onclick="chooseOpt(${i},'${o}')">${o}</span>`).join('')}</div>`;
+  if(!c)extra+=`<div class="opts">${S.cats.map(x=>`<span class="chip" onclick="setActCat(${i},'${x.id}')">${av(x)}${x.name}</span>`).join('')}</div>`}
+ return `<div class="act ${a.on?'':'off'}"><input type="checkbox" ${a.on?'checked':''} onchange="vRes.acts[${i}].on=this.checked;drawActs()"><div>${label}${extra}</div></div>`;
+}
+function setActCat(i,id){const a=vRes.acts[i];if(a.type==='日记')a.cats=[id];else a.cat=id;drawActs()}
+function chooseOpt(i,o){const A=vRes.acts,g=A[i].g,grp=A.filter(a=>a.g===g);
+ if(o==='内外都做了'||o==='两针都打了'){const[t1,t2]=o==='内外都做了'?['体内驱虫','体外驱虫']:['三联疫苗','狂犬疫苗'];
+  const at=A.indexOf(grp[grp.length-1]);const cl=grp.map(a=>({...a,type:t2,opts:null,g:null}));grp.forEach(a=>{a.type=t1;a.opts=null;a.g=null});A.splice(at+1,0,...cl)}
+ else grp.forEach(a=>{a.type=o;a.opts=null;a.g=null});
+ drawActs();
+}
+function confirmVoice(){const A=vRes.acts.filter(a=>a.on);
+ if(A.some(a=>a.opts)){toast('还有一项需要选一下类型');return}
+ if(A.some(a=>a.type==='日记'?!a.cats.length:!a.cat)){toast('还有一项没选是哪只猫');return}
+ const rids=[],pids=[],msgs=[];let nRec=0;
+ A.forEach(a=>{
+  if(a.type==='日记'){const p={id:uid(),cats:a.cats,text:a.text,date:a.date,by:S.me,synced:true,pub:false,tags:a.tags,recIds:[]};S.posts.push(p);pids.push(p.id);msgs.push(...warnMsgs(a.cats,a.tags));return}
+  const r={id:uid(),cat:a.cat,type:a.type,date:a.date,by:S.me};if(a.type==='体重')r.value=a.value;else r.note='语音记录';
+  S.records.push(r);rids.push(r.id);nRec++;
+ });
+ save();closeSheet();render();
+ const head=[nRec?`已保存${nRec}条记录`:'',pids.length?'日记已保存':''].filter(Boolean).join('，');
+ toast(`${head}，已同步给${mem(other())}${msgs.length?'。'+msgs.join('；'):''}`,()=>{S.posts=S.posts.filter(p=>!pids.includes(p.id));rmRecs(rids)()});
+}
+
+/* ---------- 删除与导出 ---------- */
+function openRec(id){const r=S.records.find(x=>x.id===id);if(!r)return;const c=cat(r.cat);
+ sheet(`<div class="shd"><b>${c.name} · ${r.type}</b><span class="muted" onclick="closeSheet()">关闭</span></div>
+ <div class="em"><div class="r"><span>日期</span><span>${md(r.date)}</span></div>${r.type==='体重'?`<div class="r"><span>体重</span><span>${r.value}kg</span></div>`:''}${r.note?`<div class="r"><span>备注</span><span>${esc(r.note)}</span></div>`:''}<div class="r"><span>记录人</span><span>${mem(r.by)}</span></div></div>
+ <button class="btn block danger" onclick="delRec('${id}')">删除这条记录</button>
+ <p class="muted tiny">删除后，相关提醒会按剩下的记录重新计算</p>`);
+}
+function delRec(id){const r=S.records.find(x=>x.id===id);S.records=S.records.filter(x=>x.id!==id);save();closeSheet();render();toast(`已删除${cat(r.cat).name}的${r.type}记录`,()=>{S.records.push(r)})}
+function delPost(id){const p=S.posts.find(x=>x.id===id);if(!p)return;const L=S.records.filter(r=>(p.recIds||[]).includes(r.id));
+ sheet(`<div class="shd"><b>日记 · ${md(p.date)}</b><span class="muted" onclick="closeSheet()">关闭</span></div>
+ <div class="card" style="margin-top:0"><div class="txt" style="font-size:15px;line-height:1.65;white-space:pre-wrap">${esc(p.text)}</div>${p.img?`<img class="thumb" src="${p.img}">`:''}</div>
+ ${L.length?`<p class="muted" style="font-size:13px;margin-top:12px">这条日记同时生成了档案数据：${L.map(r=>r.type+(r.value?' '+r.value+'kg':'')).join('、')}</p>
+ <button class="btn block danger" onclick="doDelPost('${id}',true)">删除日记和它生成的数据</button><button class="btn ghost block" style="margin-top:8px" onclick="doDelPost('${id}',false)">只删日记，保留数据</button>`
+ :`<button class="btn block danger" onclick="doDelPost('${id}',false)">删除这条日记</button>`}`);
+}
+function doDelPost(id,withRecs){const p=S.posts.find(x=>x.id===id);const rs=withRecs?S.records.filter(r=>(p.recIds||[]).includes(r.id)):[];
+ S.posts=S.posts.filter(x=>x.id!==id);S.records=S.records.filter(r=>!rs.includes(r));save();closeSheet();render();
+ toast(withRecs&&rs.length?'日记和相关数据已删除':'日记已删除',()=>{S.posts.push(p);S.records.push(...rs)});
+}
+function exportData(){try{const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`喵历数据_${TODAY}.json`;document.body.appendChild(a);a.click();a.remove();toast('已导出全部数据')}catch(e){toast('导出失败')}}
+
+load();render();
+</script>
+</body>
+</html>
