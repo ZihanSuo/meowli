@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>喵历 · 开发日志</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<style>
+:root{--bg:#F3EEE6;--card:#fff;--ink:#2B2622;--sub:#8A8178;--line:#ECE5DA;--acc:#E8833A;--acc2:#FFF1E4;color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.75}
+.wrap{max-width:720px;margin:0 auto;padding:28px 16px 60px}
+a{color:var(--acc);text-decoration:none}
+.back{font-size:14px}
+h1{font-size:26px;margin-top:14px}
+.lead{color:var(--sub);font-size:14px;margin-top:6px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tag{font-size:12px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+h2{font-size:17px;margin:34px 0 4px}
+.card{background:var(--card);border-radius:16px;padding:14px 16px;margin-top:10px;box-shadow:0 1px 3px rgba(60,40,20,.05)}
+.card h3{font-size:15px}
+.card p,.card li{font-size:14px}
+.card p+p{margin-top:8px}
+ul{padding-left:18px;margin-top:6px}
+li{margin-top:4px}
+.q{border-left:3px solid var(--acc);padding:2px 0 2px 10px;margin-top:8px;color:#5a4f45;font-size:14px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.split div{background:var(--bg);border-radius:10px;padding:10px 12px;font-size:13px}
+.split b{display:block;font-size:13px;margin-bottom:2px}
+@media(max-width:480px){.split{grid-template-columns:1fr}}
+.v{position:relative;padding-left:22px;margin-top:14px}
+.v:before{content:'';position:absolute;left:6px;top:4px;bottom:0;width:2px;background:var(--line)}
+.item{position:relative;background:var(--card);border-radius:16px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(60,40,20,.05)}
+.item:before{content:'';position:absolute;left:-21px;top:20px;width:10px;height:10px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px var(--bg)}
+.item .t{font-size:12px;color:var(--sub)}
+.item h3{font-size:15px;margin-top:2px}
+.item p{font-size:14px;margin-top:6px}
+.me{background:var(--acc2);border-radius:10px;padding:8px 10px;margin-top:8px;font-size:14px}
+.me b{color:var(--acc)}
+.ai{color:var(--sub);font-size:13px;margin-top:8px}
+.foot{color:var(--sub);font-size:12px;margin-top:40px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">‹ 返回喵历</a>
+<h1>开发日志</h1>
+<p class="lead">喵历从问题定义到上线用了一个晚上。我负责定义问题、做取舍和验收，AI 负责快速生成代码和备选方案。这里记录每一步我为什么这样决定。</p>
+<div class="meta"><span class="tag">AI编程：Claude</span><span class="tag">部署：GitHub Pages</span><span class="tag">解析：OpenAI + 规则兜底</span><span class="tag"><a href="https://github.com/zihansuo/meowli" target="_blank">源码与提交记录</a></span></div>
+
+<h2>第一步：定义问题</h2>
+<div class="card">
+ <h3>题目给的是一个很宽的方向，我先把它收窄</h3>
+ <p>“养宠记录与社区”几乎可以做成任何东西。我没有直接让 AI 写代码，而是先确定三件事：为谁做、解决什么、不做什么。</p>
+ <p><b>为谁做：多宠家庭的“老手”，只做猫。</b></p>
+ <ul>
+  <li>新手的核心需求是“这正常吗”的焦虑，本质是内容和问诊，不是记录工具</li>
+  <li>养一只猫的人，靠记忆和备忘录勉强够用；养两三只、还和伴侣或室友一起养，信息量和协作成本才真正失控</li>
+  <li>猫和狗的需求差别很大：狗主需要线下遛狗社交，猫主更多是健康管理和上门喂养互助。两个都做，两个都做不深</li>
+ </ul>
+ <p><b>解决什么：我从自己和身边多猫家庭的经历里，挑出两个最痛的场景。</b></p>
+ <div class="split">
+  <div><b>1. 健康档案散落，急用时翻不到</b>疫苗本是纸的，驱虫记在备忘录，体检单在微信收藏，体重偶尔拍在相册。半夜急诊或换医院时，说不清上次狂犬、三联打在哪天。两个人一起养时，记录只在一个人手机里，另一个人不知道这个月驱没驱虫、吃的哪袋粮、对什么过敏。</div>
+  <div><b>2. 周期护理靠记忆，忘了才出事</b>体内驱虫大约三个月一次，体外每月一次，疫苗每年加强，加班后最容易漏。漏驱虫会带出寄生虫，漏疫苗会卡住寄养和出行。现成日历没有“猫还是狗、几岁、室内还是外出”这些语义，提醒也经常被划掉。</div>
+ </div>
+ <p><b>由此定下产品主张：记录零成本，数据有回报，急用一屏看完，共养实时同步。</b>后面所有功能都要能对回这四句话，对不回的不做。</p>
+ <p class="ai">AI 在这一步帮我做了发散：按场景列出了十来个可能的痛点，比如新手焦虑、社区信息不本地、记录没有反馈等。我用上面的用户定义做了筛选，只留下和多猫共养直接相关的。</p>
+</div>
+
+<h2>迭代记录</h2>
+<div class="v">
+ <div class="item"><div class="t">9月29日 18:19 · 信息架构</div><h3>推翻初版 Tab 结构</h3>
+  <p>AI 给的初版是今日、档案、时间线、附近。</p>
+  <div class="me"><b>我改成</b>记录、日记本、附近、我的。附近是看别人，日记本是记自己，混在一起会让用户分不清什么会被别人看到；档案是低频查看的静态信息，不值得占一个 Tab。</div>
+  <p>同时我坚持两个核心痛点必须在一步之内触达：护理待办放在记录页最顶部，急诊卡常驻顶栏，任何页面一键打开。</p></div>
+
+ <div class="item"><div class="t">18:25 · 产品形态</div><h3>必须是手机端</h3>
+  <div class="me"><b>我的判断</b>记录发生在喂猫、滴药、称体重的当下，手在忙、人在猫旁边，不可能打开电脑。题目只能交一个链接，所以做成手机网页：手机上全屏像 App，可以添加到主屏幕；电脑打开显示成手机框。</div></div>
+
+ <div class="item"><div class="t">v1 · 首版上线</div><h3>先把两个痛点做透，其他都是配角</h3>
+  <ul><li>护理待办：多只猫合并成一个列表，下次时间按年龄、室内外自动推算，一键完成并同步给共养成员</li>
+  <li>急诊卡：过敏、疫苗、驱虫、体重一屏看完，可复制文字发给医生</li>
+  <li>体重异常提醒，并和日记里的症状交叉提示，让记录有回报</li>
+  <li>时间线由记录、日记和里程碑自动生成，不需要额外操作</li></ul></div>
+
+ <div class="item"><div class="t">18:36 · v2</div><h3>一个个按钮点太复杂</h3>
+  <p>我自己走了一遍流程，发现记一次驱虫要选猫、选类型、选日期、点保存，两只猫就是两遍。这正好违背了“记录零成本”。</p>
+  <div class="me"><b>我的决定</b>加语音，但不是给每个按钮配一个麦克风，而是做成“一句话记录”：说“橘子和年糕今天都滴了体外驱虫”，自动拆成两条。有歧义时只追问缺的那一项；健康数据先展示再确认写入，因为记错一次比多点一下代价大。同一个入口也能查询“橘子上次打狂犬是什么时候”。</div>
+  <div class="me"><b>数据要能删</b>删除后提醒自动重算；日记里顺带记下的体重，删日记时可以选择一起删；所有操作可撤销，数据可一键导出。</div></div>
+
+ <div class="item"><div class="t">18:41 · v3</div><h3>不是每个人都想被看见</h3>
+  <div class="me"><b>我的决定</b>账号分公开和私密，私密账号不出现在附近、不被匹配。即使是公开账号，日记也默认私密，逐条选择是否公开。</div>
+  <p>并且定了一条底线：健康档案、急诊卡、护理记录永远只对共养成员可见，不受任何设置影响。社区分享和健康数据是两套可见范围。</p></div>
+
+ <div class="item"><div class="t">18:49 · v4</div><h3>把规则解析换成真的大模型</h3>
+  <p>规则匹配换个说法就会漏，这对“一句话记录”是致命的。</p>
+  <div class="me"><b>我的设计</b>接入 OpenAI 做解析，但模型只负责理解意图，日期和数据全部从本地档案读取，杜绝模型编造健康数据。接口不可用时自动退回规则解析，界面标明当前用的是哪种，功能不会断。</div>
+  <p>API key 放在中转服务里，只允许本站调用，并设了消费上限；模型返回的猫和记录类型会再校验一遍，不认识的直接丢弃。</p></div>
+</div>
+
+<h2>我怎么用 AI</h2>
+<div class="card"><ul>
+ <li>问题定义、用户取舍、功能优先级由我决定，AI 负责发散备选方案和挑漏洞</li>
+ <li>每一版我先在手机上把核心流程走一遍，再根据体验提下一轮需求，而不是一次性堆功能</li>
+ <li>AI 给的方案我会先对照产品主张判断，对不上的直接推翻，比如初版的 Tab 结构</li>
+</ul></div>
+
+<h2>取舍</h2>
+<div class="card"><ul>
+ <li>单文件、零依赖：不用构建，部署最稳，国内打开不依赖外部 CDN</li>
+ <li>数据存在浏览器本地，预置演示数据：面试官打开即可体验，不用注册</li>
+ <li>不做狗，不做新手科普，附近的宠友和动态为演示数据</li>
+ <li>日记症状识别和拍照识别目前是规则模拟</li>
+</ul></div>
+
+<h2>如果继续做</h2>
+<div class="card"><ul>
+ <li>真实账号和云同步，共养成员之间实时推送</li>
+ <li>拍照识别接多模态模型，直接读疫苗本和体检单</li>
+ <li>提醒接入系统通知或微信服务通知，并根据用户是否常划掉提醒调整时机</li>
+ <li>附近的匹配用真实的猫数、医院、需求数据计算</li>
+</ul></div>
+
+<p class="foot">喵历 · 养宠成长记录与社区</p>
+</div>
+</body>
+</html>
