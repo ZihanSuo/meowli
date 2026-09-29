@@ -46,7 +46,7 @@ li{margin-top:4px}
 <a class="back" href="index.html">‹ 返回喵历</a>
 <h1>开发日志</h1>
 <p class="lead">喵历从问题定义到上线用了一个晚上。我负责定义问题、做取舍和验收，AI 负责快速生成代码和备选方案。这里记录每一步我为什么这样决定。</p>
-<div class="meta"><span class="tag">AI编程：Claude</span><span class="tag">部署：GitHub Pages</span><span class="tag">解析：OpenAI + 规则兜底</span><span class="tag"><a href="https://github.com/zihansuo/meowli" target="_blank">源码与提交记录</a></span></div>
+<div class="meta"><span class="tag">AI编程：Claude</span><span class="tag">部署：GitHub Pages</span><span class="tag">解析：规则引擎，预留大模型接口</span><span class="tag"><a href="https://github.com/zihansuo/meowli" target="_blank">源码与提交记录</a></span></div>
 
 <h2>第一步：定义问题</h2>
 <div class="card">
@@ -92,10 +92,9 @@ li{margin-top:4px}
   <div class="me"><b>我的决定</b>账号分公开和私密，私密账号不出现在附近、不被匹配。即使是公开账号，日记也默认私密，逐条选择是否公开。</div>
   <p>并且定了一条底线：健康档案、急诊卡、护理记录永远只对共养成员可见，不受任何设置影响。社区分享和健康数据是两套可见范围。</p></div>
 
- <div class="item"><div class="t">18:49 · v4</div><h3>把规则解析换成真的大模型</h3>
-  <p>规则匹配换个说法就会漏，这对“一句话记录”是致命的。</p>
-  <div class="me"><b>我的设计</b>接入 OpenAI 做解析，但模型只负责理解意图，日期和数据全部从本地档案读取，杜绝模型编造健康数据。接口不可用时自动退回规则解析，界面标明当前用的是哪种，功能不会断。</div>
-  <p>API key 放在中转服务里，只允许本站调用，并设了消费上限；模型返回的猫和记录类型会再校验一遍，不认识的直接丢弃。</p></div>
+ <div class="item"><div class="t">18:49 · v4</div><h3>大模型解析：接口做好，demo 暂不接</h3>
+  <p>规则匹配换个说法就会漏，正式版一定要用大模型。但我判断 demo 阶段不值得接：公开仓库里的 key 有泄露风险，需要额外的中转服务，而且中转服务在国内的访问稳定性不可控，面试官很可能打不开。</p>
+  <div class="me"><b>我的设计</b>先把接入方式定好并写进代码：模型只负责理解意图，日期和数据全部从本地档案读取，杜绝模型编造健康数据；模型返回的猫和记录类型会再校验，不认识的直接丢弃；接口超时或失败时自动退回规则解析，功能不会断。demo 用规则引擎跑，填一个接口地址就能切换。</div></div>
 </div>
 
 <h2>我怎么用 AI</h2>
@@ -110,7 +109,7 @@ li{margin-top:4px}
  <li>单文件、零依赖：不用构建，部署最稳，国内打开不依赖外部 CDN</li>
  <li>数据存在浏览器本地，预置演示数据：面试官打开即可体验，不用注册</li>
  <li>不做狗，不做新手科普，附近的宠友和动态为演示数据</li>
- <li>日记症状识别和拍照识别目前是规则模拟</li>
+ <li>一句话记录、日记症状识别和拍照识别目前是规则模拟，大模型接口已预留</li>
 </ul></div>
 
 <h2>如果继续做</h2>

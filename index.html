@@ -557,7 +557,7 @@ function openAbout(){
  <li>所有记录和日记都能删除，提醒按剩下的记录自动重算，支持撤销和导出数据</li>
  <li>附近按商圈级模糊定位，匹配相似的多猫家庭，围绕喂猫互助和医院口碑</li></ul>
  <h4>过程</h4><p><a class="link" href="log.html">开发日志</a> · <a class="link" href="https://github.com/zihansuo/meowli" target="_blank">源码</a></p>
- <h4>原型说明</h4><p>数据保存在当前浏览器；一句话记录优先调用大模型解析，接口不可用时自动退回规则解析；日记识别和拍照识别为规则模拟；语音用浏览器自带识别，iPhone的Safari可用，不支持时可用输入法的语音键。</p></div>`);
+ <h4>原型说明</h4><p>数据保存在当前浏览器；一句话记录、日记识别和拍照识别目前为规则模拟；已预留大模型解析接口，模型只负责理解意图，数据全部来自本地档案，填一个地址即可切换；语音用浏览器自带识别，iPhone的Safari可用，不支持时可用输入法的语音键。</p></div>`);
 }
 
 let tt;
@@ -694,7 +694,7 @@ function vInput(){vText=$('vtext').value;const box=$('vres');clearTimeout(aiTime
  vRes=parseCmd(vText);vRes.src=AI_URL?'loading':'rule';drawRes();
  if(AI_URL){const seq=aiSeq,txt=vText;aiTimer=setTimeout(()=>aiParse(txt,seq),700)}
 }
-function srcBadge(){const s=vRes&&vRes.src;return s==='ai'?'<span class="badge b-green">✨ AI解析</span>':s==='loading'?'<span class="badge b-grey">AI解析中…</span>':s==='fail'?'<span class="badge b-grey">规则解析（AI暂不可用）</span>':'<span class="badge b-grey">规则解析</span>'}
+function srcBadge(){if(!AI_URL)return '';const s=vRes&&vRes.src;return s==='ai'?'<span class="badge b-green">✨ AI解析</span>':s==='loading'?'<span class="badge b-grey">AI解析中…</span>':s==='fail'?'<span class="badge b-grey">规则解析（AI暂不可用）</span>':'<span class="badge b-grey">规则解析</span>'}
 function drawRes(){const box=$('vres');if(!box||!vRes)return;
  if(vRes.kind==='query'){box.innerHTML=`<div class="fl">${srcBadge()}</div><div class="ans" style="margin-top:0">${vRes.html}</div>`;return}
  if(vRes.kind==='em'){box.innerHTML=`<div class="fl">${srcBadge()}</div><button class="btn block danger" style="margin-top:0" onclick="openEm('${vRes.cat}')">打开${cat(vRes.cat).name}的急诊卡</button>`;return}
